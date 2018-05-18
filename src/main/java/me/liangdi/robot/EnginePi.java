@@ -26,8 +26,18 @@ public class EnginePi {
         return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
     }
 
+    public static void delayNanos(long nanos)
+    {
+        long elapsed;
+        final long startTime = System.nanoTime();
+        do {
+            elapsed = System.nanoTime() - startTime;
+        } while (elapsed < nanos);
+    }
+
 
     public static void main(String[] args) {
 
     }
+
 }
