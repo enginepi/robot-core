@@ -89,6 +89,13 @@
             <version>1.2-SNAPSHOT</version>
         </dependency>
 
+
+        <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>0.9.11</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -108,7 +115,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>me.liangdi.arduino.FirmataRobot</mainClass>
+                            <mainClass>com.enginepi.EnginePi</mainClass>
 
                         </manifest>
                     </archive>
@@ -129,7 +136,7 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>me.liangdi.arduino.FirmataRobot</mainClass>
+                    <mainClass>com.enginepi.EnginePi</mainClass>
                 </configuration>
             </plugin>
         </plugins>
