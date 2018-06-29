@@ -2,6 +2,7 @@ package com.enginepi;
 
 import com.enginepi.robot.IRobot;
 import com.enginepi.robot.Robot;
+import com.google.gson.Gson;
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +28,8 @@ public class EnginePi {
     private static  Set<String> properties = new HashSet<>();
     private static Pattern propertiesPattern = Pattern.compile("robot.properties");
 
+    private  static Gson gson = new Gson();
+
     /**
      * 帮助函数 map
      * @param x
@@ -49,15 +52,29 @@ public class EnginePi {
         } while (elapsed < nanos);
     }
 
+    private static List<String> listRobots() {
+        Reflections reflections = new Reflections(pack);
+        Set<Class<?>> annotated = reflections.getTypesAnnotatedWith(Robot.class);
+        List<String> ret = new ArrayList<>();
+        for(Class<?> cls : annotated) {
+
+            String name =  cls.getName();
+            log.debug("name:{}",name);
+
+            ret.add(name);
+        }
+
+        return ret;
+    }
+
     private static IRobot loadRobot(String clsName) {
         Reflections reflections = new Reflections(pack);
         Set<Class<?>> annotated = reflections.getTypesAnnotatedWith(Robot.class);
-        log.info("pack size:{}",annotated.size());
 
         for(Class<?> cls : annotated) {
 
             String name =  cls.getName();
-            log.info("name:{}",name);
+            log.debug("name:{}",name);
 
             if(name.equals(clsName) ) {
                 try {
@@ -77,11 +94,11 @@ public class EnginePi {
     }
 
     private static void initProperties(IRobot robot,Reflections reflections) {
-        properties =
-                reflections.getResources(propertiesPattern);
-        for(String propertie : properties) {
-            log.info("propertie:{}",propertie);
-        }
+//        properties =
+//                reflections.getResources(propertiesPattern);
+//        for(String propertie : properties) {
+//            log.info("propertie:{}",propertie);
+//        }
 
         String runPath = System.getProperty("user.dir");
 
@@ -91,7 +108,7 @@ public class EnginePi {
     public static void main(String[] args) {
 
         if(args.length == 0) {
-            log.info("请输入 IRobot 类名");
+            System.out.println(gson.toJson(listRobots()));
             return;
         }
 

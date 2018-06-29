@@ -11,6 +11,7 @@
 
     <logger name="chapters.configuration" level="INFO" />
     <logger name="chapters.configuration.Foo" level="DEBUG" />
+    <logger name="org.reflections.Reflections" level="OFF" />
 
     <root level="INFO">
         <appender-ref ref="STDOUT" />
