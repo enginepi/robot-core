@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
  */
 @Slf4j
 public class EnginePi {
-    public static final GpioController gpio = null;// = GpioFactory.getInstance();
+    public static final GpioController gpio  = GpioFactory.getInstance();
 
     private static String pack = "robot";
 

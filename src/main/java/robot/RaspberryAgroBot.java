@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Robot
-public class RaspberryPiCar extends AbstractRobot implements IRobot {
+public class RaspberryAgroBot extends AbstractRobot implements IRobot {
     public static final int TURN = 0;
     public static final int SPEED  = 1;
     JoyStick joyStick;

@@ -3,6 +3,7 @@ package robot;
 import com.enginepi.robot.AbstractRobot;
 import com.enginepi.robot.IRobot;
 import com.enginepi.robot.Robot;
+import com.enginepi.robot.actuator.impl.L298N;
 import com.enginepi.robot.input.JoyStick;
 import com.enginepi.robot.steppermotor.impl.GenericStepperController;
 import com.pi4j.io.gpio.*;
@@ -21,6 +22,7 @@ public class TestRobot extends AbstractRobot implements IRobot{
 
     GenericStepperController stepper ;
 
+    L298N l298N = new L298N();
 
     @Override
     public void setup() {
@@ -29,6 +31,8 @@ public class TestRobot extends AbstractRobot implements IRobot{
         stepper = new GenericStepperController(RaspiPin.GPIO_29,RaspiPin.GPIO_28);
 
         stepper.setResolution(8);
+
+
     }
 
     @Override
