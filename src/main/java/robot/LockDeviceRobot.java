@@ -26,15 +26,14 @@ public class LockDeviceRobot extends AbstractRobot implements IRobot {
     public void setup() {
         super.setup();
 
-        Pin gpio04 = RaspiPin.GPIO_04;
 
 
         lock = new Relay(RaspiPin.GPIO_04);
-        lock.set(Relay.Value.Off);
+        lock.set(Relay.Value.On);
 
         unlock = new Relay(RaspiPin.GPIO_05);
 
-        lock.set(Relay.Value.Off);
+        lock.set(Relay.Value.On);
 
         String server = "tcp://123.206.211.14:61613";
         String uuid = "001";
