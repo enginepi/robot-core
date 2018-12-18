@@ -1,9 +1,11 @@
 package com.qianguatech.iot.mqtt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import com.qianguatech.iot.core.Device;
 import com.qianguatech.iot.core.DeviceAction;
 import com.qianguatech.iot.core.DeviceActionListener;
+import com.qianguatech.iot.core.DeviceEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.paho.client.mqttv3.*;
 
@@ -28,6 +30,8 @@ public class DeviceClient implements MqttCallback {
     MqttClient client = null;
 
     ObjectMapper mapper = new ObjectMapper();
+
+    Gson gson = new Gson();
 
 
     List<DeviceActionListener> actionListeners = new ArrayList<>();
@@ -69,6 +73,9 @@ public class DeviceClient implements MqttCallback {
     @Override
     public void messageArrived(String topic, MqttMessage message) throws Exception {
         String body = new String(message.getPayload());
+        int id = message.getId();
+
+        log.info("mqtt id:{}",id);
         if(Topic.isAction(topic)) {
 
             Device device = new Device();
@@ -94,4 +101,33 @@ public class DeviceClient implements MqttCallback {
 
     }
 
+    /**
+     * 发送事件
+     * @param event
+     * @return
+     */
+    public boolean emit(DeviceEvent event) {
+
+        String content = gson.toJson(event);
+
+        MqttMessage message=new MqttMessage(content.getBytes());
+        message.setQos(qos);
+        //设置是否在服务器中保存消息体
+        message.setRetained(false);
+
+        String topic = Topic.event(this.deviceUUID);
+
+        MqttTopic mqttTopic=client.getTopic(topic);
+        MqttDeliveryToken token= null;
+        try {
+            token = mqttTopic.publish(message);
+        } catch (MqttException e) {
+
+            e.printStackTrace();
+
+            return false;
+        }
+        log.info("mqtt publish:{},\ntopic{}",content,topic);
+        return token.isComplete();
+    }
 }

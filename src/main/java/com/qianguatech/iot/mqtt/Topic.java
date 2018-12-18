@@ -44,4 +44,13 @@ public class Topic {
     public static boolean isAction(String topic) {
         return topic.startsWith(TOPIC_ACTION);
     }
+
+    /**
+     * 创建 event topic
+     * @param uuid
+     * @return
+     */
+    public static  String event(String uuid) {
+        return TOPIC_EVENT + uuid;
+    }
 }

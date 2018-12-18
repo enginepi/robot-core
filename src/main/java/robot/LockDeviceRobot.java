@@ -33,7 +33,7 @@ public class LockDeviceRobot extends AbstractRobot implements IRobot {
 
         unlock = new Relay(RaspiPin.GPIO_05);
 
-        lock.set(Relay.Value.On);
+        unlock.set(Relay.Value.On);
 
         String server = "tcp://123.206.211.14:61613";
         String uuid = "001";
@@ -54,7 +54,7 @@ public class LockDeviceRobot extends AbstractRobot implements IRobot {
                         lock.set(Relay.Value.Off);
 
                         try {
-                            Thread.sleep(300);
+                            Thread.sleep(500);
 
                         } catch (InterruptedException e) {
                             e.printStackTrace();
@@ -65,7 +65,7 @@ public class LockDeviceRobot extends AbstractRobot implements IRobot {
                         unlock.set(Relay.Value.Off);
 
                         try {
-                            Thread.sleep(300);
+                            Thread.sleep(500);
 
                         } catch (InterruptedException e) {
                             e.printStackTrace();

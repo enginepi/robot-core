@@ -23,7 +23,7 @@ public class Relay {
     }
 
     public void set(Value value) {
-        log.info("设置:{}",value);
+        //log.info("设置:{}",value);
         if(value == Value.On) {
             output.high();
         } else {
