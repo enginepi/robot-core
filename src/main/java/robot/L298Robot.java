@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Robot
 public class L298Robot  extends AbstractRobot implements IRobot {
-    public static final int TURN = 0;
+    public static final int TURN = 2;
     public static final int SPEED  = 1;
 
     JoyStick joyStick;
@@ -21,8 +21,9 @@ public class L298Robot  extends AbstractRobot implements IRobot {
     public void setup() {
         super.setup();
 
-        left.initMotorA(RaspiPin.GPIO_04,RaspiPin.GPIO_05);
+        left.initMotorA(RaspiPin.GPIO_08,RaspiPin.GPIO_09,RaspiPin.GPIO_07);
         joyStick = new JoyStick(0);
+        left.initMotorB(RaspiPin.GPIO_15,RaspiPin.GPIO_16,RaspiPin.GPIO_01);
     }
 
     @Override
@@ -34,26 +35,37 @@ public class L298Robot  extends AbstractRobot implements IRobot {
             double speed = joyStick.getAxisValue(SPEED);
 
             double turn = joyStick.getAxisValue(TURN);
-            if(Math.abs(speed) > 0.2) {
+            if(Math.abs(speed) > 0.3) {
                 // log.info("speed:{}",speed);
 
                 if(speed > 0) {
                     // 后退
                     left.getMotorA().set(speed);
+                    left.getMotorB().set(speed);
                     log.info("后退:{}",speed);
                 } else {
                     // 前进
                     log.info("前进:{}",speed);
                     left.getMotorA().set(speed);
+                    left.getMotorB().set(speed);
+
                 }
+            }else {
+                left.getMotorA().set(0);
+                left.getMotorB().set(0);
             }
 
-            if(Math.abs(turn) > 0.2) {
+            if(Math.abs(turn) > 0.3) {
                 if(turn > 0) {
-                    log.info("右转:{}",turn);
+                    left.getMotorA().set(turn);
+                    left.getMotorB().set(-turn);
+                    log.info("后退:{}",turn);
                 } else {
-                    log.info("左传:{}",turn);
+                    left.getMotorA().set(turn);
+                    left.getMotorB().set(-turn);
+                    log.info("后退:{}",turn);
                 }
+
             }
         }
 
