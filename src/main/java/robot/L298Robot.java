@@ -17,6 +17,8 @@ public class L298Robot  extends AbstractRobot implements IRobot {
     JoyStick joyStick;
     L298 left = new L298();
 
+    // int float double String
+
     @Override
     public void setup() {
         super.setup();
@@ -69,5 +71,13 @@ public class L298Robot  extends AbstractRobot implements IRobot {
             }
         }
 
+
+//        String value = "123";
+//
+//        int i = Integer.parseInt(value);
+
+
     }
+
+
 }
