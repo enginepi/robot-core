@@ -34,29 +34,33 @@ public class EncoderTestRobot extends AbstractRobot implements IRobot {
 
         super.setup();
 
-        encoder = new Encoder(RaspiPin.GPIO_14,RaspiPin.GPIO_29);
+        encoder = new Encoder(RaspiPin.GPIO_15,RaspiPin.GPIO_16);
 
 
         encoder.init();
 
 
-        try {
-            client = new Socket(getByName(server),port);
-            log.info("连接服务器成功");
-        } catch (IOException e) {
-
-            log.info("连接服务器错误");
-            e.printStackTrace();
-        }
+//        try {
+//            client = new Socket(getByName(server),port);
+//            log.info("连接服务器成功");
+//        } catch (IOException e) {
+//
+//            log.info("连接服务器错误");
+//            e.printStackTrace();
+//        }
     }
 
     @Override
     public void loop() throws InterruptedException {
+        long millis = System.currentTimeMillis();
 
-        Thread.sleep(500);
-        long abs = Math.abs(encoder.read());
-        sendData(String.valueOf(abs/100));
-        log.info("count:{}",encoder.read());
+
+        if(millis % 1000 == 0) {
+            log.info("count:{}",encoder.read());
+
+        }
+
+        //sendData(String.valueOf(abs/100));
     }
 
     private void sendData(String data) {
