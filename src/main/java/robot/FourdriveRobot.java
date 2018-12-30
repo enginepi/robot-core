@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 @Robot
 @Slf4j
 public class FourdriveRobot extends AbstractRobot implements IRobot {
-    public static final int Turn=2;
+    public static final int Turn=0;
     public static final int Speed=1;
     JoyStick joyStick;
     L298 left=new L298();
@@ -49,17 +49,12 @@ public class FourdriveRobot extends AbstractRobot implements IRobot {
             }else{
                 if(Math.abs(turn)>0.3){
                     log.info("转弯:{}",turn);
-                    if(turn>0){
-                        left.getMotorA().set(turn);
-                        left.getMotorB().set(turn);
-                        right.getMotorA().set(-turn);
-                        right.getMotorB().set(-turn);
-                    }else{
-                        left.getMotorA().set(turn);
-                        left.getMotorB().set(turn);
-                        right.getMotorA().set(-turn);
-                        right.getMotorB().set(-turn);
-                    }
+
+                        left.getMotorA().set(-turn);
+                        left.getMotorB().set(-turn);
+                        right.getMotorA().set(turn);
+                        right.getMotorB().set(turn);
+
 
                 }else{
 
