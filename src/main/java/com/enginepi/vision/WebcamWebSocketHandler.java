@@ -38,6 +38,7 @@ public class WebcamWebSocketHandler {
 
         this.session = session;
 
+
         Map<String, Object> message = new HashMap<String, Object>();
         message.put("type", "list");
         message.put("webcams", WebcamCache.getWebcamNames());

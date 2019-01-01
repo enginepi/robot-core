@@ -11,3 +11,6 @@
 ### Tutorial (WIP)
 
 ###
+
+### use camera
+* sudo apt-get install libjepg8-dev

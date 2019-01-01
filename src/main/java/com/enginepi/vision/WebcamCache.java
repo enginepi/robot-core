@@ -35,8 +35,8 @@ public class WebcamCache implements WebcamUpdater.DelayCalculator, WebcamListene
     private static final WebcamCache CACHE = new WebcamCache();
 
     public WebcamCache() {
-
         for (Webcam webcam : Webcam.getWebcams()) {
+            log.info("webcam:{}",webcam.getName());
 
             try {
                 webcam.open(true, this);

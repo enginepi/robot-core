@@ -1,5 +1,7 @@
 package com.enginepi.vision;
 
+import com.github.sarxos.webcam.Webcam;
+import com.github.sarxos.webcam.ds.v4l4j.V4l4jDriver;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.websocket.server.WebSocketHandler;
@@ -11,6 +13,10 @@ import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
 @Slf4j
 public class CameraServer {
     Server server = null;
+
+    static {
+        Webcam.setDriver(new V4l4jDriver());
+    }
 
     /**
      * 启动摄像头服务
