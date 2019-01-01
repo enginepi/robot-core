@@ -12,7 +12,9 @@ import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
 public class CameraServer {
     Server server = null;
 
-
+    /**
+     * 启动摄像头服务
+     */
     public void start() {
         WebSocketHandler wsHandler = new WebSocketHandler() {
 
