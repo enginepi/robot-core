@@ -13,7 +13,7 @@ public interface IRobot {
     /**
      * 自动阶段调用
      */
-    void automatic();
+    void automatic() throws InterruptedException;
 
     /**
      * 程序启动调用

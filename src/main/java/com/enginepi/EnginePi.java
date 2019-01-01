@@ -240,7 +240,11 @@ public class EnginePi {
         @Override
         public void run() {
             while(!cancel) {
-                robot.automatic();
+                try {
+                    robot.automatic();
+                } catch (InterruptedException e) {
+
+                }
             }
 
 

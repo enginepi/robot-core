@@ -29,7 +29,7 @@ public abstract class AbstractRobot implements IRobot{
 
 
     @Override
-    public void automatic() {
+    public void automatic() throws InterruptedException {
 
     }
 
