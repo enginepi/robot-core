@@ -7,26 +7,21 @@ import com.enginepi.robot.input.Encoder;
 import com.fazecast.jSerialComm.SerialPort;
 import com.fazecast.jSerialComm.SerialPortDataListener;
 import com.fazecast.jSerialComm.SerialPortEvent;
-import com.pi4j.io.gpio.GpioPin;
-import com.pi4j.io.gpio.RaspiPin;
 import lombok.extern.slf4j.Slf4j;
-import sun.net.util.IPAddressUtil;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.net.InetAddress;
 import java.net.Socket;
-import java.net.UnknownHostException;
 
-import static java.net.InetAddress.*;
+import static java.net.InetAddress.getByName;
 
 @Slf4j
 @Robot
 public class EncoderTestRobot extends AbstractRobot implements IRobot {
 
-    Encoder encoder;
-
+    public static final String KEY_IP = "server.ip";
+    public static final String KEY_PORT = "server.port";
     String server = "172.16.203.32";
     int port = 12321;
 
@@ -39,6 +34,14 @@ public class EncoderTestRobot extends AbstractRobot implements IRobot {
     public void setup() {
 
         super.setup();
+
+        String ip = getProperty(KEY_IP);
+
+        log.info("prop ip:{}",ip);
+
+        if(StringUtils.isNotBlank(ip)) {
+            server = ip;
+        }
 
         SerialPort[] commPorts = SerialPort.getCommPorts();
 

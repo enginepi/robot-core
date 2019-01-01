@@ -6,12 +6,13 @@ import com.google.gson.Gson;
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.reflections.Reflections;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -25,7 +26,8 @@ import java.util.regex.Pattern;
 @Slf4j
 public class EnginePi {
     public static GpioController gpio = null;
-
+    public static final String PROP_FILE = "robot.properties";
+    public static final String KEY_RASPBERRYPI_SUPPORT = "pi.support";
     private static String pack = "robot";
     /**
      * 15 秒自动阶段
@@ -34,7 +36,7 @@ public class EnginePi {
 
     private static List<IRobot> robots = new ArrayList<>();
     private static  Set<String> properties = new HashSet<>();
-    private static Pattern propertiesPattern = Pattern.compile("robot.properties");
+    private static Pattern propertiesPattern = Pattern.compile(PROP_FILE);
 
     private  static Gson gson = new Gson();
 
@@ -114,7 +116,19 @@ public class EnginePi {
 
         String runPath = System.getProperty("user.dir");
 
-        log.info("runPath:{}",runPath);
+        File propFile = new File(runPath + File.separator + PROP_FILE);
+
+        if(propFile.exists()) {
+            Properties properties  = new Properties();
+            try {
+                properties.load(new FileInputStream(propFile));
+                robot.setProperties(properties);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        log.info("runPath:{}",propFile.getAbsolutePath());
     }
 
     public static boolean inRaspberryPi() {
@@ -138,12 +152,21 @@ public class EnginePi {
         }
 
 
-        try{
-            //gpio = GpioFactory.getInstance();
-            raspberryPiSupport =  true;
-        }catch (Exception e) {
-            log.warn("robot is not running in raspberry pi");
+        String property = robot.getProperties()
+                .getProperty(KEY_RASPBERRYPI_SUPPORT, "");
+
+
+        if(StringUtils.isBlank(property) || "true".equalsIgnoreCase(property)) {
+            try{
+                gpio = GpioFactory.getInstance();
+                raspberryPiSupport =  true;
+            }catch (Exception e) {
+                log.warn("robot is not running in raspberry pi");
+            }
         }
+
+
+
 
 
         try {

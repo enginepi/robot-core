@@ -1,5 +1,7 @@
 package com.enginepi.robot;
 
+import java.util.Properties;
+
 /**
  * 机器人类接口
  * @author liangdi
@@ -24,4 +26,7 @@ public interface IRobot {
      */
     void loop() throws InterruptedException;
 
+    void setProperties(Properties properties);
+
+    Properties getProperties();
 }
