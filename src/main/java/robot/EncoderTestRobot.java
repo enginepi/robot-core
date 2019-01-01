@@ -27,7 +27,7 @@ public class EncoderTestRobot extends AbstractRobot implements IRobot {
 
     Encoder encoder;
 
-    String server = "172.16.200.85";
+    String server = "172.16.203.32";
     int port = 12321;
 
     Socket client  = null;
@@ -89,14 +89,14 @@ public class EncoderTestRobot extends AbstractRobot implements IRobot {
                 }
             });
         }
- //        try {
-//            client = new Socket(getByName(server),port);
-//            log.info("连接服务器成功");
-//        } catch (IOException e) {
-//
-//            log.info("连接服务器错误");
-//            e.printStackTrace();
-//        }
+         try {
+            client = new Socket(getByName(server),port);
+            log.info("连接服务器成功");
+        } catch (IOException e) {
+
+            log.info("连接服务器错误");
+            e.printStackTrace();
+        }
     }
 
     @Override
