@@ -23,4 +23,15 @@ public abstract class AbstractRobot implements IRobot{
 
         }
     }
+
+
+    @Override
+    public void automatic() {
+
+    }
+
+    @Override
+    public boolean supportAutomatic() {
+        return false;
+    }
 }

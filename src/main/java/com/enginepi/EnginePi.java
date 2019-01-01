@@ -12,6 +12,10 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.regex.Pattern;
 
 /**
@@ -20,15 +24,23 @@ import java.util.regex.Pattern;
  */
 @Slf4j
 public class EnginePi {
-    public static final GpioController gpio = GpioFactory.getInstance();
+    public static GpioController gpio = null;
 
     private static String pack = "robot";
+    /**
+     * 15 秒自动阶段
+     */
+    public static final int AUTOMATIC_TIME = 15;
 
     private static List<IRobot> robots = new ArrayList<>();
     private static  Set<String> properties = new HashSet<>();
     private static Pattern propertiesPattern = Pattern.compile("robot.properties");
 
     private  static Gson gson = new Gson();
+
+    private static boolean raspberryPiSupport =  false;
+
+   static ExecutorService threadPool = Executors.newFixedThreadPool(2);
 
     /**
      * 帮助函数 map
@@ -105,6 +117,10 @@ public class EnginePi {
         log.info("runPath:{}",runPath);
     }
 
+    public static boolean inRaspberryPi() {
+        return raspberryPiSupport;
+    }
+
     public static void main(String[] args) {
 
         if(args.length == 0) {
@@ -115,20 +131,104 @@ public class EnginePi {
         String robotCls = args[0];
         IRobot robot = loadRobot(robotCls);
 
-        if(robot != null) {
-            robot.setup();
-        } else {
+        if(robot == null) {
             log.info("找不到对因的 IRobot 类");
+            return;
+
+        }
+
+
+        try{
+            //gpio = GpioFactory.getInstance();
+            raspberryPiSupport =  true;
+        }catch (Exception e) {
+            log.warn("robot is not running in raspberry pi");
+        }
+
+
+        try {
+            robot.setup();
+        } catch (Exception e) {
+            log.error("robot setup error:{}",e.getMessage());
             return;
         }
 
-        while(true) {
-            try {
-                robot.loop();
-            } catch (InterruptedException e) {
-                log.error("执行错误:{}",e.getMessage(),e);
-            }
+
+
+        if(robot.supportAutomatic()){
+            // 自动阶段
+            AutomaticThread automaticThread = new AutomaticThread(robot);
+
+
+
+            automaticThread.setName("automatic thread");
+            log.info("automatic function start");
+
+            threadPool.execute(automaticThread);
+
+            long start = System.currentTimeMillis();
+
+
+            while(true) {
+                long now = System.currentTimeMillis();
+                int past = (int) ((now - start ) / 1000);
+
+                if(past >= AUTOMATIC_TIME) {
+                    (automaticThread).cancel();
+
+                    //threadPool.shutdownNow();
+                    log.info("automatic function finished");
+                    break;
+                }
+            };
+
         }
+
+
+        Thread loopThead = new Thread(() -> {
+            while(true) {
+                try {
+                    robot.loop();
+                } catch (InterruptedException e) {
+                    log.error("执行错误:{}",e.getMessage(),e);
+                }
+            }
+        });
+
+        loopThead.setName("loop thread");
+
+        threadPool.execute(loopThead);
+
+        while(true) {
+            // wait for command
+        }
+
+
+    }
+
+    public static class AutomaticThread extends Thread{
+        IRobot robot;
+
+        public AutomaticThread(IRobot robot) {
+            this.robot = robot;
+        }
+
+        volatile boolean cancel = false;
+        @Override
+        public void run() {
+            while(!cancel) {
+                robot.automatic();
+            }
+
+
+            Thread.currentThread().interrupt();
+        }
+
+        public void cancel(){
+            log.info("automatic thread cancel");
+            this.cancel = true;
+        }
+
 
     }
 
